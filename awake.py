@@ -7,7 +7,7 @@ pyautogui.FAILSAFE = False
 
 class Logger:
     def __init__(self):
-        self.filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
+        self.filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}-log.csv"
         with open(self.filename,'a') as file:
             file.write('datetime,is_stationary\n')
 
