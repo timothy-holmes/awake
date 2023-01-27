@@ -1,7 +1,9 @@
 # awake
 
+```
 pip install pyautogui
 python awake.py
+```
 
 Limitations:
 - Relies on mouse movement only. App will wake after between `TIME_TO_WAKE` and `TIME_TO_WAKE + IDLE_RESOLUTION` seconds-ish of no mouse movement
