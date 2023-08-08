@@ -1,13 +1,26 @@
+__version__ = '2023-07-24c'
+
+"""
+Awake.py - 10 seconds of mouse moving when required
+
+Release Notes:
+2023-07-24c
+** NOTE: extra dependency (install with command in cmd/ps `pip install keyboard`)
+- enhancement: sleeping stopwatch reset by keyboard activity
+- feature: press esc to stop awakening (mouse movement)
+"""
+
 import time
 from datetime import datetime, timedelta
 
+import keyboard
 import pyautogui
 pyautogui.FAILSAFE = False
 
 
 class Logger:
     def __init__(self):
-        self.filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}-log.csv"
+        self.filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
         with open(self.filename,'a') as file:
             file.write('datetime,is_stationary\n')
 
@@ -24,7 +37,7 @@ class TimeKeeper:
     def is_sleep_in(self):
         return self.now > self.awake
     
-    def set_awake(self):
+    def set_awake(self,*args):
         self.awake = self.now + timedelta(seconds=self.TIME_IDLE_TO_WAKE)
 
     def set_both(self):
@@ -40,24 +53,21 @@ class TimeKeeper:
 
 class Mouse:
     def __init__(self):
-        self._last_position = self.get_snapshot()
+        self._last_position = pyautogui.position()
 
-    def is_stationary(self, last_position=None, current_position=None):
-        cp = current_position or self.get_snapshot()
-        lp = last_position or self._last_position
-        result = (cp == lp)
-        self._last_position = self.get_snapshot()
+    def is_stationary(self):
+        result = (self._last_position == pyautogui.position())
+        self._last_position = pyautogui.position()
         return result
 
-    @staticmethod
-    def get_snapshot():
-        return pyautogui.position()
-
     def move_mouse(self):
-        """ Moves mouse required amount and presses shift key """
+        """ Moves mouse required amount and presses shift key. Returns length of movement """
         for i in range(200):
             pyautogui.moveTo(0,i*4)
+            if keyboard.is_pressed('esc'): 
+                break
         pyautogui.moveTo(1,1)
+        
         for i in range(3):
             pyautogui.press("shift")
 
@@ -65,13 +75,14 @@ class Mouse:
 def main():
     """ Keeps computer awake if at risk of sleeping (showing away status) """
     IDLE_RESOLUTION = 10 # not really seconds, but indicative of time passed
-    TIME_IDLE_TO_WAKE = 18
+    TIME_IDLE_TO_WAKE = 60
 
     logger = Logger()
     times = TimeKeeper(TIME_IDLE_TO_WAKE)
     mouse = Mouse()
+    keyboard.on_press(times.set_awake)
 
-    print(f"{times.now.strftime('%H:%M:%S')}: App started...")
+    print(f"{times.now.strftime('%H:%M:%S')}: App (version {__version__}) started...")
 
     while(True):
         times.set_now()
@@ -84,7 +95,7 @@ def main():
                 mouse.move_mouse()
                 times.set_both()
         else:
-            times.set_both()
+            times.set_awake()
 
         time.sleep(IDLE_RESOLUTION)
 
