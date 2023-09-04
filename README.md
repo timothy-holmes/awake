@@ -3,7 +3,7 @@
 ```powershell
 git clone https://github.com/timothy-holmes/awake.git
 cd awake
-pip install pyautogui keyboard
+pip install -r requirements.txt
 python .\awake.py
 ```
 

@@ -11,8 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extraneous mouse movement exits wake sequence.
-- Mouse movements occur in-place.
 - Popup shown during wake sequence.
+
+### Changed
+
+- Reduced dependencies to minimum, and version >1.0+
+
+## [3.0.0] - 2023-09-04
+
+### Added
+
+- Keyboard presses count as active
+- Added requirements file (use `pip install -r requirements.txt` to install dependencies)
+
+### Fixed
+
+- Mouse didn't return to original idle position, now it does.
 
 ## [2.0.0] - 2023-08-09
 

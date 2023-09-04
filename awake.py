@@ -1,4 +1,4 @@
-__version__ = '2.0.0'
+__version__ = '3.0.0'
 
 import argparse
 import time
@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 import keyboard
 import pyautogui
+import pynput
 pyautogui.FAILSAFE = False
 
 
@@ -58,6 +59,7 @@ class TimeKeeper:
             time_idle_to_wake (int): Time in seconds before mouse movement.
         """
         self.time_idle_to_wake = time_idle_to_wake
+
         self.set_both()
 
     def is_sleep_in(self):
@@ -115,7 +117,7 @@ class Mouse:
             pyautogui.moveTo(start_position[0], start_position[1] + i * 4)
             if keyboard.is_pressed('esc'):
                 break
-        pyautogui.moveTo(start_position[0], start_position[1])
+        pyautogui.moveTo(*self.last_position)
         
         for i in range(3):
             pyautogui.press("shift")
@@ -142,16 +144,26 @@ def main():
     IDLE_TIME = args.idle
     times = TimeKeeper(IDLE_TIME)
     mouse = Mouse(args.multiscreen)
+    
+    # Keyboard+mouse listeners
     keyboard.on_press(times.set_awake)
+    mouse_listener = pynput.mouse.Listener(
+        on_move=times.set_awake,
+        on_click=times.set_awake,
+        on_scroll=times.set_awake)
+    mouse_listener.start()
+
+    keyboard_listener = pynput.keyboard.Listener(
+        on_press=times.set_awake)
+    keyboard_listener.start()
 
     logger.print(f"{times.now.strftime('%H:%M:%S')}: Awake.py (version {__version__}). App started", _force=True)
-
 
     while True:
         times.set_now()
         mouse_is_stationary = mouse.is_stationary()
         logger.log(times.now, mouse_is_stationary)
-
+ 
         if mouse_is_stationary:
             if times.is_sleep_in():
                 logger.print(f"{times.now.strftime('%H:%M:%S')}: Sleeping longer than {IDLE_TIME} seconds")
