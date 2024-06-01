@@ -17,6 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reduced dependencies to minimum, and version >1.0+
 
+## [4.0.0] - 2024-06-01
+
+### Added
+
+- Added stop time to CLI arguments to schedule app exit
+- Added version to CLI arguments
+
+### Changed
+
+- Exposed idle resolution time as optional CLI argument
+- Changed installation method to streamline process
+
 ## [3.0.0] - 2023-09-04
 
 ### Added

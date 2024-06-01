@@ -1,10 +1,11 @@
 # awake.py
 
-```powershell
-git clone https://github.com/timothy-holmes/awake.git
-cd awake
-pip install -r requirements.txt
-python .\awake.py
+```bash
+python -m pip install pipx
+pipx install https://github.com/timothy-holmes/awake.git
+pipx ensurepath
+# restart terminal to refresh env vars
+awake --multiscreen --stop-time 1800
 ```
 
 ## What it does
@@ -14,9 +15,13 @@ python .\awake.py
 
 ## Command Line Options
 
+All options are optional:
+
+- `-i, --idle` - amou of idle time computer is idle before waking action (integer, default: 60)
 - `-l, --log` - enable logging to file and stdout (default: disabled)
 - `-m, --multiscreen` - move mouse on screen mouse is idle on (default: disabled)
-- `i, --interval` - time in seconds between mouse movements (integer, default: 60 seconds)
+- `-i, --interval` - time in seconds between mouse movements (integer, default: 60 seconds)
+- `-s., --stop-time` - run awake until it's time to Pack 'Er Up Booooiiizzzz! (string with format HHMM, default: disabled)
 
 ## Limitations
 
@@ -25,7 +30,7 @@ python .\awake.py
 
 ## Minimum resoruce-consuming configuration
 
-- Reduce `IDLE_RESOLUTION` constant (eg. 30, 60) in main function in script file (minimum of 25% of `IDLE_TIME`` recommended).
+- Specify `--idle-res` constant (eg. 30, 60) in main function in script file (minimum of 25% of `IDLE_TIME` recommended).
 - Ensure logging is disabled (default).
 
 ## Recommended usage
