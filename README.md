@@ -1,8 +1,10 @@
 # awake.py
 
 ```bash
+git clone https://github.com/timothy-holmes/awake.git
+cd awake
 python -m pip install pipx
-pipx install https://github.com/timothy-holmes/awake.git
+pipx install .
 pipx ensurepath
 # restart terminal to refresh env vars
 awake --multiscreen --stop-time 1800
